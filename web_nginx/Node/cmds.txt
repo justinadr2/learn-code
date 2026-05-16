@@ -1,0 +1,3 @@
+
+npm init -y
+npm install express body-parser mysql2 cors multer bcrypt express-session axios

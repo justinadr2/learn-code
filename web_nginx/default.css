@@ -1,0 +1,72 @@
+
+h1 {
+   text-align: center;
+   font-family:'Courier New', Courier, monospace;
+   font-size: 44px;
+}
+
+body {
+   margin: 47px;
+}
+
+input {
+    padding: 10px;
+    font-size: 20px;
+}
+
+input, button {
+   margin-top: 20px;
+   padding: 10px;
+   background-color: #f4f4f4;
+   border: 1px solid #ccc;
+   font-family: sans-serif;
+}
+
+input {
+   min-height: 50px;
+   white-space: pre-wrap;
+   overflow-x: auto;
+}
+
+button {
+   cursor: pointer;
+   transition: background 0.2s;
+   display: inline-block;
+   color: #333;
+   font-weight: bold;
+   text-transform: uppercase;
+   font-size: 12px;
+   letter-spacing: 1px;
+}
+
+button:hover {
+   background-color: #e8e8e8;
+   border-color: #bbb;
+}
+
+button:active {
+   background-color: #ddd;
+   transform: translateY(1px);
+}
+
+#status { 
+    color: #666; 
+    font-style: italic;
+    display: block; 
+    margin-top: 20px;
+    font-family: 'consolas', monospace;
+}
+
+#output {
+   min-height: 20px;
+   white-space: pre-wrap;
+   overflow-x: auto;
+}
+
+#output {
+   margin-top: 20px;
+   padding: 10px;
+   background-color: #f4f4f4;
+   border: 1px solid #ccc;
+   font-family: sans-serif;
+}

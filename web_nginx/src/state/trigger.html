@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #output { 
+            margin-top: 20px; 
+            padding: 15px; 
+            border: 2px dashed #444; 
+            background: #eee; 
+            min-height: 50px; 
+        }
+        .btn { 
+            cursor: pointer; 
+            padding: 10px 20px; 
+            background: #222; 
+            color: white; 
+            border: none; 
+            margin-right: 5px; 
+        }
+        .btn:hover { 
+            background: #444; 
+        }
+    </style>
+</head>
+<body>
+    <button class="btn" onclick="fetchPage('secret')">Request Secret Page</button>
+    <button class="btn" onclick="fetchPage('beta')">Request Beta Page</button>
+    <button class="btn" onclick="fetchPage('invalid')">Test Error Case</button>
+    
+    <div id="output"></div>
+    
+    <script>
+        async function fetchPage(target) {
+            const output = document.getElementById('output');
+            output.innerHTML = "Loading...";
+            
+            try {   
+                const response = await fetch('/api/get-state', {
+                    method: 'GET',
+                    headers: {
+                        'X-Target-Page': target
+                    }
+                });
+
+                const content = await response.text();
+                output.innerHTML = content;
+            } catch (err) {
+                output.innerText = "Connection Error: " + err.message;
+            }
+        }
+    </script>
+</body>
+</html>

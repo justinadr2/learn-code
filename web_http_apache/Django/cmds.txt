@@ -1,6 +1,0 @@
-
-pip install django django-cors-headers
-
-django-admin startproject myproject .
-
-python manage.py runserver

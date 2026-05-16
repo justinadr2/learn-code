@@ -1,41 +1,30 @@
-// fix the Stack() constructor
-
 #include <iostream>
-#include <vector>
 
 class Node
 {
 public:
     int val;
-    Node* bot;
-    Node() : val(0), bot(nullptr) {}
-    Node(int x) : val(x), bot(nullptr) {}
-    Node(int x, Node* y) : val(x), bot(y) {}
+    Node* next;
+    Node(int val, Node* next) : val(val), next(next) {}
 };
 
 class Stack
 {
 public:
     Node* top;
-    Stack()
+    int count;
+    Stack() : top(nullptr), count(0) {}
+    Stack(int* init, int size) : top(nullptr), count(0)
     {
-        this->top = nullptr;
-    }
-
-    Stack(int* x, int size)
-    {
-        this->top = nullptr;
-        if (!x)
-            return;
         for (int i = 0; i < size; i++)
         {
-            this->Push(x[i]);
-        }
+            Push(init[i]);
+        }       
     }
 
-    void Push(int x)
+    void Push(int val)
     {
-        Node* node = new Node(x, this->top);
+        Node* node = new Node(val, this->top);
         this->top = node;
     }
 
@@ -43,8 +32,9 @@ public:
     {
         if (!this->top)
             return -1;
+
         Node* tmp = this->top;
-        this->top = tmp->bot;
+        this->top = tmp->next;
         int out = tmp->val;
         delete tmp;
         return out;
@@ -52,36 +42,77 @@ public:
 
     void Print()
     {
-        if (!this->top)
+        if (!this->top || !this->top->next)
             return;
         std::cout << this->top->val << " <- top\n";
-        Node* node = this->top->bot;
-        while (node)
+        Node* tmp = this->top->next;
+        while (tmp)
         {
-            std::cout << node->val << '\n';
-            node = node->bot;
+            std::cout << tmp->val << '\n';
+            tmp = tmp->next;
+        }
+        std::cout << std::endl;
+    }
+
+    void Sort()
+    {
+        if (!this->top || !this->top->next)
+            return;
+        
+        for (Node* curr = this->top; curr; curr = curr->next)
+        {
+            for (Node* next = curr->next; next; next = next->next)
+            {
+                if (curr->val > next->val)
+                {
+                    int tmp = curr->val;
+                    curr->val = next->val;
+                    next->val = tmp;
+                }
+            }
         }
     }
 
+    void Reverse()
+    {
+        if (!this->top || !this->top->next)
+            return;
+        Node* prev = nullptr;
+        Node* curr = this->top;
+        Node* next = nullptr;
+        while (curr)
+        {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        this->top = prev;
+    }
+    
     ~Stack()
     {
         while (this->top)
         {
             Node* tmp = this->top;
-            this->top = tmp->bot;
+            this->top = tmp->next;
             delete tmp;
         }
     }
 };
 
+
 int main()
 {
-    int buffer[] = { 400, 500, 600 };
-    Stack stack(buffer, sizeof(buffer) / sizeof(buffer[0]));
-    stack.Push(750);
-    stack.Print();
-    int out = stack.Pop();
-    std::cout << '\n' << out << " <- popped\n\n";
-    stack.Print();
+    int init[] = { 50, 60, 80, 40 };
+    Stack stack(init, 4);
 
+    stack.Push(70);
+    
+    stack.Print();
+    
+    stack.Reverse();
+
+    stack.Print();
 }
+

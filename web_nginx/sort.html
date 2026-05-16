@@ -1,0 +1,105 @@
+<html>
+<head>
+    <link rel="stylesheet" href="default.css?v=1">
+        <style>
+            #con { 
+                display: flex; 
+                gap: 10px; 
+                margin-top: 30px; 
+                flex-wrap: wrap;
+            }
+
+            .val {
+                font-family: 'consolas', monospace;
+                padding: 10px;
+                font-size: 20px;
+                color: #333;
+                background-color: #f4f4f4;
+                border: 1px solid #ccc;
+                min-width: 40px;
+                text-align: center;
+                
+                transition: all 0.2s ease;
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            .val.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .val.checking { 
+                background-color: #ffff99 !important;
+                border-color: #bbb;
+            }
+
+            .val.swapping { 
+                background-color: #dff0d8 !important; 
+                border-color: #3c763d;
+                transform: scale(1.05); 
+                font-weight: bold;
+            }
+        </style>
+</head>
+<body>
+    <input id="input" type="text" placeholder="e.g. 4, 2, 1, 5, 3">
+    <br>
+    <button onclick="Sort()">Sort Numbers</button>
+    <hr>
+    <div id="con"></div>
+
+    <script>
+        const input = document.getElementById('input');
+        const con = document.getElementById('con');
+
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        async function Sort() {
+            let n = input.value.split(',').map(item => Number(item.trim()));
+            con.innerHTML = "";
+            input.value = "";
+
+            const spans = [];
+            for (let i = 0; i < n.length; i++) {
+                const span = document.createElement('span');
+                span.className = "val";
+                span.innerText = n[i];
+                con.appendChild(span);
+                spans.push(span);
+                
+                setTimeout(() => span.classList.add('show'), 10);
+                await sleep(150); 
+            }
+
+            await sleep(800); 
+
+            for (let i = 0; i < n.length; i++) {
+                for (let j = 0; j < n.length - i - 1; j++) {
+                    spans[j].classList.add("checking");
+                    spans[j+1].classList.add("checking");
+                    
+                    await sleep(250); 
+
+                    if (n[j] > n[j+1]) {
+                        spans[j].classList.replace("checking", "swapping");
+                        spans[j+1].classList.replace("checking", "swapping");
+                        await sleep(150);
+
+                        let temp = n[j];
+                        n[j] = n[j+1];
+                        n[j+1] = temp;
+
+                        spans[j].innerText = n[j];
+                        spans[j+1].innerText = n[j+1];
+                        await sleep(150); 
+                    }
+
+                    spans[j].classList.remove("checking", "swapping");
+                    spans[j+1].classList.remove("checking", "swapping");
+                }
+            }
+        } 
+    </script>
+</body>
+</html>

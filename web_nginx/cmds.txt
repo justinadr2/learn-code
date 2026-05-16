@@ -1,0 +1,16 @@
+
+Terminal 1:
+nginx.exe
+
+Terminal 2:
+mysqld.exe
+
+Terminal 3:
+node web_nginx/Node/server.js
+
+Terminal 4:
+python web_nginx/django/manage.py runserver
+
+Terminal 5:
+php-cgi.exe -b 127.0.0.1:9000
+

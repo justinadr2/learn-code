@@ -1,3 +1,0 @@
-
-
-Only for local network

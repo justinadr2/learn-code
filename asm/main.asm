@@ -1,8 +1,3 @@
-; ============================
-; Read file and print to console
-; Windows x64 NASM
-; ============================
-
 default rel
 
 extern CreateFileA
@@ -26,10 +21,6 @@ bytes_read resd 1
 section .text
 global main
 main:
-
-    ; ----------------------------
-    ; Get stdout handle
-    ; ----------------------------
     mov rcx, STD_OUTPUT_HANDLE
     call GetStdHandle
     mov r12, rax               
@@ -50,9 +41,6 @@ main:
     mov r13, rax                ; save file handle
 
 read_loop:
-    ; ----------------------------
-    ; ReadFile
-    ; ----------------------------
     sub rsp, 40
 
     mov rcx, r13                ; hFile
@@ -67,9 +55,6 @@ read_loop:
     cmp dword [bytes_read], 0
     je done                     ; EOF
 
-    ; ----------------------------
-    ; WriteFile (stdout)
-    ; ----------------------------
     sub rsp, 40
 
     mov rcx, r12                ; stdout handle

@@ -1,0 +1,102 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="/src/stack/style.css">
+        <link rel="stylesheet" href="/default.css?v=1">
+        <style>
+            h1 {
+                color: rgba(32, 126, 152, 0.775);
+            }
+        </style>    
+    </head>
+    <body>
+        <h1> Writing Kernels are easy asfff..</h1>
+        <input type="number" placeholder="Enter node" id="input-node">
+        <br>
+        <button onclick="Push()">Push Node</button>
+        <br>
+        <button onclick="Pop()">Pop Node</button>
+        <span id="status"></span>
+        <hr>
+        <div id="container"></div>
+
+        <script>
+            const status = document.getElementById('status');
+            const container = document.getElementById('container');
+            const input = document.getElementById('input-node');
+
+            window.stack = {
+                top: null,
+                PushNode: function(x) {
+                    const node = { val: x, bot: this.top };
+                    this.top = node;
+                },
+                PopNode: function() {
+                    if (!this.top) return null;
+                    const out = this.top.val;
+                    this.top = this.top.bot;
+                    return out;
+                },
+                RenderNodes: function(isPush = false) {
+                    container.innerHTML = "";
+                    if (!this.top) return;
+
+                    let current = this.top;
+                    let first = true;
+
+                    while (current) {
+                        const nodeDiv = document.createElement('div');
+                        nodeDiv.className = 'stack-node';
+                        
+                        const label = first ? '<span class="top-label">TOP</span>' : '';
+                        nodeDiv.innerHTML = `Value: ${current.val} ${label}`;
+                        
+                        if (first && isPush) {
+                            nodeDiv.classList.add('push-animation');
+                        }
+
+                        container.appendChild(nodeDiv);
+                        current = current.bot;
+                        first = false;
+                    }
+                }
+            };
+
+            function Push() {
+                if (input.value === "") {
+                    status.innerText = "No value specified";
+                    return;
+                }
+                window.stack.PushNode(input.value);
+                status.innerText = `Pushed ${input.value}`;
+                input.value = "";
+                window.stack.RenderNodes(true);
+            }
+
+            function Pop() {
+                if (window.stack.top === null) {
+                    status.innerText = "Stack is empty";
+                    return;
+                }
+
+                const firstElement = container.firstChild;
+                if (firstElement) {
+                    firstElement.classList.add('pop-animation');
+                    
+                    setTimeout(() => {
+                        const val = window.stack.PopNode();
+                        status.innerText = `Popped ${val}`;
+                        window.stack.RenderNodes();
+                    }, 300);
+                }
+            }
+
+            window.stack.PushNode(40);
+            window.stack.PushNode(50);
+            window.stack.PushNode(60);
+            window.stack.PushNode(70);
+    
+            window.stack.RenderNodes();
+            status.innerText = "Stack initialized";
+        </script>
+    </body>
+</html>

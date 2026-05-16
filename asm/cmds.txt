@@ -2,4 +2,4 @@ nasm -f win64 main.asm -o main.obj
 
 link main.obj /entry:main kernel32.lib ucrt.lib legacy_stdio_definitions.lib
 
-for args.asm = link main.obj /defaultlib:libcmt.lib kernel32.lib
+args.asm: link main.obj /defaultlib:libcmt.lib kernel32.lib

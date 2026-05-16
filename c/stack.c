@@ -1,98 +1,122 @@
-#include <string.h>
+#include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
+#include <ctype.h>
 
 typedef struct Node_
 {
-    struct Node_* bot;
     int val;
+    struct Node_* next;
 } Node;
 
 typedef struct Stack_
 {
     Node* top;
-    int len;
 } Stack;
 
-void Push(Stack* s, int a) 
+void Push(Stack* stack, int val)
 {
     Node* node = malloc(sizeof(Node));
-    node->val = a;
-    node->bot = s->top;
-    s->top = node;
-    s->len++;
+    if (!node)
+        return;
+    node->next = stack->top;
+    node->val = val;
+    stack->top = node;
 }
 
-int Pop(Stack* s)
+int Pop(Stack* stack)
 {
-    if (!s->top)
-        return -1;
-    Node* tmp = s->top;
-    s->top = tmp->bot;
+    if (!stack->top)
+        return 0;
+    Node* tmp = stack->top;
     int out = tmp->val;
-    s->len--;
+    stack->top = tmp->next;
     free(tmp);
     return out;
 }
 
-void Print(Stack* s)
+void Print(Stack* stack)
 {
-    if (!s->top)
+    if (!stack->top)
         return;
-    int len = s->len - 1;
-    printf("%i: %i <- top\n", len--, s->top->val);
-    Node* t = s->top->bot;
-    for (int i = len; i >= 0; i--)
+    printf("%i <- top\n", stack->top->val);
+    Node* tmp = stack->top->next;
+    while (tmp)
     {
-        printf("%i: %i\n", i, t->val);
-        t = t->bot;
+        printf("%i\n", tmp->val);
+        tmp = tmp->next;
+    }
+    printf("\n");
+}
+
+void Sort(Stack* stack)
+{
+    if (!stack->top || !stack->top->next)
+        return;
+
+    for (Node* curr = stack->top; curr; curr = curr->next)
+    {
+        for (Node* next = curr->next; next; next = next->next)
+        {
+            if (curr->val > next->val)
+            {
+                int tmp = curr->val;
+                curr->val = next->val;
+                next->val = tmp;
+            }
+        }
     }
 }
 
-void Delete(Stack* s)
+void Reverse(Stack* stack)
 {
-    while (s->top)
-    {
-        Node* t = s->top;
-        s->top = t->bot;
-        free(t);
-    }
-}
-
-void Reverse(Stack* s)
-{
+    if (!stack->top || !stack->top->next)
+        return;
+    
     Node* prev = NULL;
-    Node* curr = s->top;
+    Node* curr = stack->top;
     Node* next = NULL;
     while (curr)
     {
-        next = curr->bot;
-        curr->bot = prev;
+        next = curr->next;
+        curr->next = prev;
         prev = curr;
         curr = next;
     }
-    s->top = prev;
+    stack->top = prev;
 }
 
-
-int main(int argc, char** argv)
+Stack StackInit(int* init, int size)
 {
     Stack stack;
     stack.top = NULL;
-    stack.len = 0;
-    Push(&stack, 500);
-    Push(&stack, 200);
-    Push(&stack, 300);
-    Push(&stack, 100);
-    Push(&stack, 400);
+    for (int i = 0; i < size; i++)
+        Push(&stack, init[i]);
+    return stack;       
+}
+
+void Free(Stack* stack)
+{
+    while (stack->top)
+    {
+        Node* tmp = stack->top;
+        stack->top = tmp->next;
+        free(tmp);
+    }
+}
+
+int main() 
+{
+    int init[] = { 60, 40, 70, 50 };
+    Stack stack = StackInit(init, sizeof(init) / sizeof(init[0]));        
+
+    Push(&stack, 80);
     
+    Print(&stack);
+    
+    Reverse(&stack);
+
     Print(&stack);
 
-    Reverse(&stack);
-    printf("\n");
-    Print(&stack);
-    
-    
-    Delete(&stack); 
+    Free(&stack);
 }
